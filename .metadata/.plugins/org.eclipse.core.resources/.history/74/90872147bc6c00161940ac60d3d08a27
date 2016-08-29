@@ -1,0 +1,19 @@
+package example;
+import java.util.*;
+public class ex1 {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ArrayList<ArrayList<Integer>> L1 = new ArrayList<ArrayList<Integer>>();
+		
+		ArrayList<Integer> l1= new ArrayList<Integer>();
+		
+		l1.add(1);
+		L1.add(l1);
+		System.out.println(L1);
+		int sum = 0;
+		sum += '1' - '0';
+		System.out.println(sum);
+	}
+
+}

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><testrun name="EvaluatePrefixListVisitorTest" project="CS5321_P1" tests="4" started="4" failures="0" errors="0" ignored="0">
+  <testsuite name="cs4321.project1.EvaluatePrefixListVisitorTest" time="0.0">
+    <testcase name="testUnarySimple" classname="cs4321.project1.EvaluatePrefixListVisitorTest" time="0.0"/>
+    <testcase name="testAdditionMultipleInstances" classname="cs4321.project1.EvaluatePrefixListVisitorTest" time="0.0"/>
+    <testcase name="testSingleNumberNode" classname="cs4321.project1.EvaluatePrefixListVisitorTest" time="0.0"/>
+    <testcase name="testAdditionSimple" classname="cs4321.project1.EvaluatePrefixListVisitorTest" time="0.0"/>
+  </testsuite>
+</testrun>

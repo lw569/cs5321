@@ -1,0 +1,15 @@
+16:24:42 **** Incremental Build of configuration Debug for project aes128 ****
+make all 
+Building file: ../main.c
+Invoking: Cross GCC Compiler
+gcc -O0 -g3 -Wall -c -fmessage-length=0 -MMD -MP -MF"main.d" -MT"main.o" -o "main.o" "../main.c"
+Finished building: ../main.c
+ 
+Building target: aes128
+Invoking: Cross GCC Linker
+gcc  -o "aes128"  ./main.o   
+Finished building target: aes128
+ 
+
+16:24:43 Build Finished (took 279ms)
+
