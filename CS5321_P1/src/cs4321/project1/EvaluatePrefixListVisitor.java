@@ -11,19 +11,30 @@ import java.util.*;
 
 public class EvaluatePrefixListVisitor implements ListVisitor {
 	
-	private Stack<ArrayList<String>> operatorStack;
+	private Stack<Pair> operatorStack;
 	private Stack<Double> operandStack;
-	private ArrayList<String> tmpList;
 	
 	public EvaluatePrefixListVisitor() {
 		// TODO fill me in
-		operatorStack = new Stack<ArrayList<String>>();
+		operatorStack = new Stack<Pair>();
 		operandStack = new Stack<Double>();
-		tmpList = new ArrayList<String>();
-		tmpList.add("0");
-		tmpList.add("0");
 	}
-
+	
+	
+	private class Pair{
+		private ListNode node;
+		private int count;
+		
+		public Pair(ListNode n, int i){
+			node = n;
+			count = i;
+		}
+		
+		public void decCount(){
+			count--;
+		}
+	}
+	
 	public double getResult() {
 		// TODO fill me in
 		return operandStack.pop(); // so that skeleton code compiles
@@ -34,102 +45,88 @@ public class EvaluatePrefixListVisitor implements ListVisitor {
 		// TODO fill me in
 		
 		operandStack.push(node.getData());
-		if (operatorStack.size() == 0){
-			return;
-		}
-		
-		helper(node);
-	}
-	
-	public void helper(NumberListNode node){
-		tmpList = operatorStack.pop();
-		tmpList.set(1, Integer.toString(Integer.parseInt(tmpList.get(1)) - 1));
-		operatorStack.push(tmpList);
-		
-		String tmpStr = new String();
-		tmpStr = tmpList.get(1);
-		int tmpInt = Integer.parseInt(tmpStr);
-		
-		if (tmpInt == 1){
+		if (operatorStack.size() != 0){
+			Pair pair = operatorStack.peek();
+			pair.decCount();
+			
+			if (pair.count == 0){
+				helper();
+			}
 			if (node.getNext() != null){
 				node.getNext().accept(this);
 			}
-		}else{ //此处有问题， tmpInt会变成－1， 不应该。tmpStr == "0"
-			operatorStack.pop();
-			tmpStr = tmpList.get(0);
-			double op1 = operandStack.pop();
-			if (tmpStr == "~"){
-				operandStack.push(-op1);
-			}else{
-				double op2 = operandStack.pop();
-				switch (tmpStr){
-					case "+":
-						operandStack.push(op1 + op2);
-						break;
-					case "-":
-						operandStack.push(op1 - op2);
-						break;
-					case "*":
-						operandStack.push(op2 * op1);
-						break;
-					case "/":
-						operandStack.push(op2 / op1);
-						break;
-				} //switch
-
-			}
-			if (operatorStack.size() > 0){
-				helper(node);
-			}			
-			else if (node.getNext() != null){
-				node.getNext().accept(this);
+		}
+	}
+	
+	public void helper(){
+		double second = operandStack.pop();
+		double first =0;  
+		// in case of unary list node 
+		Pair pair= operatorStack.pop();
+		if(pair.node instanceof UnaryMinusListNode) {  
+			operandStack.push(-second);
+		}else{
+			first = operandStack.pop();		
+			if(pair.node instanceof AdditionListNode) {
+				operandStack.push(first + second);
+			} else if (pair.node instanceof DivisionListNode) {
+				operandStack.push(first / second);
+			} else if (pair.node instanceof MultiplicationListNode) {
+				operandStack.push(first * second);
+			} else if (pair.node instanceof SubtractionListNode) {
+				operandStack.push(first - second);
+			} 
+		}
+		if (operatorStack.isEmpty()){
+			return;
+		}else{
+			pair = operatorStack.peek();
+			pair.decCount();
+			if (pair.count == 0){
+				helper();
 			}
 		}
-		
 	}
 
+	
+	
 	@Override
 	public void visit(AdditionListNode node) {
 		// TODO fill me in
-		tmpList.set(0, "+");
-		tmpList.set(1, "2");
-		operatorStack.push(tmpList);
+		Pair pair = new Pair(node, 2);
+		operatorStack.push(pair);
 		node.getNext().accept(this);
 	}
 
 	@Override
 	public void visit(SubtractionListNode node) {
 		// TODO fill me in
-		tmpList.set(0, "-");
-		tmpList.set(1, "2");
-		operatorStack.push(tmpList);
+		Pair pair = new Pair(node, 2);
+		operatorStack.push(pair);
 		node.getNext().accept(this);
 	}
 
 	@Override
 	public void visit(MultiplicationListNode node) {
 		// TODO fill me in
-		tmpList.set(0, "*");
-		tmpList.set(1, "2");
-		operatorStack.push(tmpList);
+		Pair pair = new Pair(node, 2);
+		operatorStack.push(pair);
 		node.getNext().accept(this);
 	}
 
 	@Override
 	public void visit(DivisionListNode node) {
 		// TODO fill me in
-		tmpList.set(0, "/");
-		tmpList.set(1, "2");
-		operatorStack.push(tmpList);
+		Pair pair = new Pair(node, 2);
+		operatorStack.push(pair);
 		node.getNext().accept(this);
 	}
 
 	@Override
 	public void visit(UnaryMinusListNode node) {
 		// TODO fill me in
-		tmpList.set(0, "~");
-		tmpList.set(1, "1");
-		operatorStack.push(tmpList);
+		Pair pair = new Pair(node, 1);
+		operatorStack.push(pair);
 		node.getNext().accept(this);
 	}
 }
