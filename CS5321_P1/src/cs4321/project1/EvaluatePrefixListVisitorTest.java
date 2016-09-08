@@ -103,5 +103,37 @@ public class EvaluatePrefixListVisitorTest {
 		n9.accept(v1);
 		assertEquals(-2.0, v1.getResult(), DELTA);
 	}
+	
+	
+	@Test
+	public void testMultipleInstances2() {
+		ListNode n1 = new NumberListNode(2.0);
+		ListNode n2 = new NumberListNode(10.0);
+		ListNode n3 = new NumberListNode(20.0);
+		ListNode n4 = new SubtractionListNode();
+		ListNode n5 = new DivisionListNode();
+		ListNode n6 = new NumberListNode(3.0);
+		ListNode n7 = new NumberListNode(2.0);
+		ListNode n8 = new AdditionListNode();
+		ListNode n9 = new NumberListNode(10.0);
+		ListNode n10 = new UnaryMinusListNode();
+		ListNode n11 = new DivisionListNode();
+		ListNode n12 = new MultiplicationListNode();
+		
+		n12.setNext(n11);
+		n11.setNext(n10);
+		n10.setNext(n9);
+		n9.setNext(n8);
+		n8.setNext(n7);
+		n7.setNext(n6);
+		n6.setNext(n5);
+		n5.setNext(n4);
+		n4.setNext(n3);
+		n3.setNext(n2);
+		n2.setNext(n1);
+		EvaluatePrefixListVisitor v1 = new EvaluatePrefixListVisitor();
+		n12.accept(v1);
+		assertEquals(-10.0, v1.getResult(), DELTA);
+	}
 
 }

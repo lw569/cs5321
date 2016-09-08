@@ -21,7 +21,7 @@ public class ParserTest {
 		assertEquals("1.0", v1.getResult());
 
 	}
-	
+
 	@Test
 	public void testUnaryMinusSimple() {
 		Parser p1 = new Parser("- 1.0");
@@ -39,6 +39,16 @@ public class ParserTest {
 		PrintTreeVisitor v1 = new PrintTreeVisitor();
 		parseResult1.accept(v1);
 		assertEquals("(-(-1.0))", v1.getResult());
+
+	}
+	
+	@Test
+	public void testSimple() {
+		Parser p1 = new Parser("4.0 * 1.0 + 3.0 / 2.0 + - 5.0");
+		TreeNode parseResult1 = p1.parse();
+		PrintTreeVisitor v1 = new PrintTreeVisitor();
+		parseResult1.accept(v1);
+		assertEquals("(((4.0*1.0)+(3.0/2.0))+(-5.0))", v1.getResult());
 
 	}
 

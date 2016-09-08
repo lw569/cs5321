@@ -4,7 +4,8 @@ import cs4321.project1.list.*;
 import java.util.*;
 
 /**
- * Provide a comment about what your class does and the overall logic
+ * Evaluate a prefix list obtained from preorder traversal of a binary arithematic expressino
+ * tree.
  * 
  * @author Your names and netids go here
  */
@@ -20,26 +21,32 @@ public class EvaluatePrefixListVisitor implements ListVisitor {
 		operandStack = new Stack<Double>();
 	}
 	
-	
+	/**wrapper class, object of this class is the basic unit on operatorStack*/
 	private class Pair{
 		private ListNode node;
 		private int count;
 		
+		/**Constructor
+		 * Precondition: n is not null and i is in [1,2]*/
 		public Pair(ListNode n, int i){
 			node = n;
 			count = i;
 		}
 		
+		/**mutator
+		 * subtract 1 from count */
 		public void decCount(){
 			count--;
 		}
 	}
 	
+	/**Return the result after evaluation*/
 	public double getResult() {
 		// TODO fill me in
 		return operandStack.pop(); // so that skeleton code compiles
 	}
 
+	/**visit NumberListNode objects*/
 	@Override
 	public void visit(NumberListNode node) {
 		// TODO fill me in
@@ -58,6 +65,7 @@ public class EvaluatePrefixListVisitor implements ListVisitor {
 		}
 	}
 	
+	/**a recursive helper method for visit(NumberListNode node)*/
 	public void helper(){
 		double second = operandStack.pop();
 		double first =0;  
@@ -88,8 +96,7 @@ public class EvaluatePrefixListVisitor implements ListVisitor {
 		}
 	}
 
-	
-	
+	/**visit AdditionListNode objects*/
 	@Override
 	public void visit(AdditionListNode node) {
 		// TODO fill me in
@@ -98,6 +105,7 @@ public class EvaluatePrefixListVisitor implements ListVisitor {
 		node.getNext().accept(this);
 	}
 
+	/**visit SubtractionListNode objects*/
 	@Override
 	public void visit(SubtractionListNode node) {
 		// TODO fill me in
@@ -106,6 +114,7 @@ public class EvaluatePrefixListVisitor implements ListVisitor {
 		node.getNext().accept(this);
 	}
 
+	/**visit MultiplicationListNode objects*/
 	@Override
 	public void visit(MultiplicationListNode node) {
 		// TODO fill me in
@@ -114,6 +123,7 @@ public class EvaluatePrefixListVisitor implements ListVisitor {
 		node.getNext().accept(this);
 	}
 
+	/**visit DivisionListNode objects*/
 	@Override
 	public void visit(DivisionListNode node) {
 		// TODO fill me in
@@ -122,6 +132,7 @@ public class EvaluatePrefixListVisitor implements ListVisitor {
 		node.getNext().accept(this);
 	}
 
+	/**visit UnaryMinusListNode objects*/
 	@Override
 	public void visit(UnaryMinusListNode node) {
 		// TODO fill me in

@@ -18,6 +18,7 @@ public class Parser {
 
 	private String[] tokens;
 	private int currentToken; // pointer to next input token to be processed
+	private int bound;
 
 	/**
 	 * @precondition input represents a valid expression with all tokens
@@ -28,7 +29,8 @@ public class Parser {
 	 */
 	public Parser(String input) {
 		this.tokens = input.split("\\s+");
-		currentToken = 0;
+		this.currentToken = this.tokens.length - 1;
+		this.bound = 0;
 	}
 
 	/**
@@ -46,9 +48,21 @@ public class Parser {
 	 * @return the (root node of) the resulting subtree
 	 */
 	private TreeNode factor() {
-
 		// TODO fill me in
-		return null;
+		if(this.tokens[this.currentToken] == "("){
+			while(this.tokens[this.currentToken] != ")"){
+				this.currentToken++;
+			}
+			this.currentToken--;
+			return this.expression();
+		}
+		
+		if(this.tokens[this.currentToken].charAt(0) == '-' ){
+			this.currentToken++;
+			return new UnaryMinusTreeNode(this.factor());
+		}
+		return new LeafTreeNode(Double.parseDouble(this.tokens[this.currentToken]));
+		
 	}
 
 	/**
@@ -59,7 +73,46 @@ public class Parser {
 	private TreeNode term() {
 
 		// TODO fill me in
-		return null;
+		int pCount = 0;
+		int temp, temp2, start = this.currentToken;
+		for(; this.currentToken > this.bound; this.currentToken--){
+			if(this.tokens[this.currentToken] == ")") {
+				pCount++;
+			}
+			if(this.tokens[this.currentToken] == "(" && pCount > 0) {
+				pCount--;
+			}
+			
+			if(pCount > 0){
+				continue;
+			}else{ //pCount == 0
+				
+				if(this.tokens[this.currentToken].charAt(0) == '*'){
+					temp = this.currentToken;
+					this.currentToken++; 
+					temp2 = this.bound;
+					this.bound = start;
+					TreeNode right = this.factor();
+					this.currentToken = temp - 1;
+					this.bound = temp2;
+					TreeNode left = this.term(); 
+					return new MultiplicationTreeNode(left, right);
+				}else if (this.tokens[this.currentToken].charAt(0) == '/'){  //binary minus operator
+					temp = this.currentToken;
+					this.currentToken++; 
+					temp2 = this.bound;
+					this.bound = start;
+					TreeNode right = this.factor();
+					this.currentToken = temp - 1;
+					this.bound = temp2;
+					TreeNode left = this.term(); 
+					return new DivisionTreeNode(left, right);
+				}
+			}
+			
+		}
+		return this.factor();
+		
 
 	}
 
@@ -71,7 +124,48 @@ public class Parser {
 	private TreeNode expression() {
 
 		// TODO fill me in
-		return null;
+		int pCount = 0;
+		int start = this.currentToken, temp, temp2;
+		for(; this.currentToken > this.bound; currentToken--){
+			if(this.tokens[this.currentToken] == ")") {
+				pCount++;
+			}
+			if(this.tokens[this.currentToken] == "(" && pCount > 0) {
+				pCount--;
+			}
+			
+			if(pCount > 0){
+				continue;
+			}else{ //pCount == 0
+				if(this.tokens[this.currentToken].charAt(0) == '+'){
+					temp = this.currentToken;
+					temp2 = this.bound;
+					this.currentToken = start;
+					this.bound = temp + 1;
+					TreeNode right = this.term();
+					this.currentToken = temp - 1;
+					this.bound = temp2;
+					TreeNode left = this.expression(); 
+					return new AdditionTreeNode(left, right);
+				}else if (this.currentToken > 0 && this.tokens[this.currentToken].charAt(0) == '-' && 
+						( (this.tokens[this.currentToken - 1].charAt(0) != '+') && 
+						(this.tokens[this.currentToken - 1].charAt(0) != '-') && (this.tokens[this.currentToken - 1].charAt(0) != '*') &&
+						(this.tokens[this.currentToken - 1].charAt(0) != '/')) ){  //binary minus operator
+					temp = this.currentToken;
+					temp2 = this.bound;
+					this.currentToken = start;
+					this.bound = temp + 1;
+					TreeNode right = this.term();
+					this.currentToken = temp - 1;
+					this.bound = temp2;
+					TreeNode left = this.expression(); 
+					return new SubtractionTreeNode(left, right);
+				}
+			}
+			
+		}
+		this.currentToken = start;
+		return this.term();
 
 	}
 }
