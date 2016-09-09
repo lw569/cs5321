@@ -28,7 +28,7 @@ public class Parser {
 	 *               be matched and properly nested.
 	 */
 	public Parser(String input) {
-		this.tokens = input.split("\\s+");
+		this.tokens = input.trim().split("\\s+");
 		this.currentToken = this.tokens.length - 1;
 		this.bound = 0;
 	}
@@ -49,8 +49,9 @@ public class Parser {
 	 */
 	private TreeNode factor() {
 		// TODO fill me in
-		if(this.tokens[this.currentToken] == "("){
-			while(this.tokens[this.currentToken] != ")"){
+		if(this.tokens[this.currentToken].charAt(0) == '('){
+			this.bound = this.currentToken + 1;
+			while(this.tokens[this.currentToken].charAt(0) != ')'){
 				this.currentToken++;
 			}
 			this.currentToken--;
@@ -76,10 +77,10 @@ public class Parser {
 		int pCount = 0;
 		int temp, temp2, start = this.currentToken;
 		for(; this.currentToken > this.bound; this.currentToken--){
-			if(this.tokens[this.currentToken] == ")") {
+			if(this.tokens[this.currentToken].charAt(0) == ')') {
 				pCount++;
 			}
-			if(this.tokens[this.currentToken] == "(" && pCount > 0) {
+			if(this.tokens[this.currentToken].charAt(0) == '(' && pCount > 0) {
 				pCount--;
 			}
 			
@@ -127,10 +128,10 @@ public class Parser {
 		int pCount = 0;
 		int start = this.currentToken, temp, temp2;
 		for(; this.currentToken > this.bound; currentToken--){
-			if(this.tokens[this.currentToken] == ")") {
+			if(this.tokens[this.currentToken].charAt(0) == ')') {
 				pCount++;
 			}
-			if(this.tokens[this.currentToken] == "(" && pCount > 0) {
+			if(this.tokens[this.currentToken].charAt(0) == '(' && pCount > 0) {
 				pCount--;
 			}
 			
@@ -147,10 +148,11 @@ public class Parser {
 					this.bound = temp2;
 					TreeNode left = this.expression(); 
 					return new AdditionTreeNode(left, right);
-				}else if (this.currentToken > 0 && this.tokens[this.currentToken].charAt(0) == '-' && 
-						( (this.tokens[this.currentToken - 1].charAt(0) != '+') && 
+				}else if (this.currentToken > (this.bound + 1) && this.tokens[this.currentToken].charAt(0) == '-' && 
+						 (this.tokens[this.currentToken - 1].charAt(0) != '+') && 
 						(this.tokens[this.currentToken - 1].charAt(0) != '-') && (this.tokens[this.currentToken - 1].charAt(0) != '*') &&
-						(this.tokens[this.currentToken - 1].charAt(0) != '/')) ){  //binary minus operator
+						(this.tokens[this.currentToken - 1].charAt(0) != '/') &&
+						(this.tokens[this.currentToken - 1].charAt(0) != '(')){  //binary minus operator
 					temp = this.currentToken;
 					temp2 = this.bound;
 					this.currentToken = start;
